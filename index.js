@@ -29,7 +29,6 @@ app.post("/register",(req,res)=>{
         fullName: req.body.fullName,
         username: req.body.prn,
         email: req.body.email,
-        password: req.body.password,
         secret: req.body.secret
     });
 
