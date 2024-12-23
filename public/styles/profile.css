@@ -1,0 +1,149 @@
+/* Profile specific styles */
+.profile-main {
+    padding-top: 100px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.large-profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 4px solid var(--primary);
+    padding: 4px;
+}
+
+.profile-header h1 {
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+
+.profile-header p {
+    color: #666;
+}
+
+.orders-section h2 {
+    margin: 2rem 0 1rem;
+    color: var(--text);
+}
+
+.reserved-items {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.reserved-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reserved-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.reserved-info img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.timer {
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    animation: pulse 1s infinite;
+}
+
+.timer.urgent {
+    background: var(--error);
+}
+
+.order-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.order-date {
+    color: #666;
+}
+
+.order-status {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.order-status.completed {
+    background-color: rgba(46, 213, 115, 0.1);
+    color: var(--success);
+}
+
+.order-items {
+    display: grid;
+    gap: 1rem;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.order-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.item-details h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.item-details p {
+    color: var(--primary);
+    margin: 0.2rem 0 0;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

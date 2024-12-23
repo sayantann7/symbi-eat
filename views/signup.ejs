@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - SymbiEat</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <a href="/home" style="text-decoration: none; color:inherit;"><div class="logo">SymbiEat</div></a>
+    </nav>
+
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <!-- <img src="/images/default-avatar.svg" alt="Profile" class="auth-avatar"> -->
+                <h1>Create Account</h1>
+                <p>Join SymbiEat today</p>
+            </div>
+
+            <form action="/register" method="post" class="auth-form">
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                        <input name="fullName" type="text" placeholder="Full Name" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-id-card"></i>
+                        <input name="prn" type="text" placeholder="PRN" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input name="email" type="email" placeholder="Email" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input name="password" type="password" placeholder="Password" required>
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input name="confirmPassword" type="password" placeholder="Confirm Password" required>
+                    </div>
+                </div> -->
+
+                <!-- <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" required>
+                        <span>I agree to the Terms & Conditions</span>
+                    </label>
+                </div> -->
+
+                <button type="submit" class="auth-button">Create Account</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="/">Sign In</a></p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

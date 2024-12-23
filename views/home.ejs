@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SymbiEat - College Canteen</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <a href="/home" style="text-decoration: none; color:inherit;"><div class="logo">SymbiEat</div></a>
+        <div class="profile">
+            <img src="/images/default-avatar.svg" alt="Profile" class="profile-img">
+            <div class="dropdown">
+                <a href="/profile" class="dropdown-item">
+                    <i class="fas fa-user"></i>
+                    Visit Profile
+                </a>
+                <a href="/logout" class="dropdown-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <div class="welcome">
+            <h1>Welcome to SymbiEat</h1>
+            <p>Delicious food, delivered with love!</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="food-section">
+            <h2>❤️ Suggested for you</h2>
+            <div class="food-grid">
+                <div class="food-card">
+                    <div class="food-image" style="background-image: url('images/foods/sandwich.jpg')"></div>
+                    <div class="food-info">
+                        <h3>Club Sandwich</h3>
+                        <p>₹120</p>
+                        <span class="available">Available</span>
+                        <button class="reserve">Reserve Now</button>
+                    </div>
+                </div>
+                <div class="food-card">
+                    <div class="food-image" style="background-image: url('images/foods/pasta.jpg')"></div>
+                    <div class="food-info">
+                        <h3>Creamy Pasta</h3>
+                        <p>₹150</p>
+                        <span class="unavailable">Sold Out</span>
+                        <button class="notify">Notify Me</button>
+                    </div>
+                </div>
+                <div class="food-card">
+                    <div class="food-image" style="background-image: url('images/foods/burger.jpg')"></div>
+                    <div class="food-info">
+                        <h3>Cheese Burger</h3>
+                        <p>₹100</p>
+                        <span class="available">Available</span>
+                        <button class="reserve">Reserve Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="food-section">
+            <h2>🔥 What's Hot?</h2>
+            <div class="food-grid">
+                <div class="food-card">
+                    <div class="food-image" style="background-image: url('images/foods/pizza.jpg')"></div>
+                    <div class="food-info">
+                        <h3>Margherita Pizza</h3>
+                        <p>₹200</p>
+                        <span class="available">Available</span>
+                        <button class="reserve">Reserve Now</button>
+                    </div>
+                </div>
+                <div class="food-card">
+                    <div class="food-image" style="background-image: url('images/foods/noodles.jpg')"></div>
+                    <div class="food-info">
+                        <h3>Schezwan Noodles</h3>
+                        <p>₹130</p>
+                        <span class="unavailable">Sold Out</span>
+                        <button class="notify">Notify Me</button>
+                    </div>
+                </div>
+                <div class="food-card">
+                    <div class="food-image" style="background-image: url('images/foods/fries.jpg')"></div>
+                    <div class="food-info">
+                        <h3>Loaded Fries</h3>
+                        <p>₹90</p>
+                        <span class="available">Available</span>
+                        <button class="reserve">Reserve Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

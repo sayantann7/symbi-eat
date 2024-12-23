@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - SymbiEat</title>
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/profile.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <nav>
+      <a href="/home" style="text-decoration: none; color:inherit;"><div class="logo">SymbiEat</div></a>
+      <div class="profile">
+        <img
+          src="images/default-avatar.svg"
+          alt="Profile"
+          class="profile-img"
+        />
+        <div class="dropdown">
+          <a href="/home" class="dropdown-item">
+            <i class="fas fa-home"></i>
+            Home
+          </a>
+          <a href="/logout" class="dropdown-item">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="profile-main">
+      <div class="profile-header">
+        <img
+          src="images/default-avatar.svg"
+          alt="Profile"
+          class="large-profile-img"
+        />
+        <h1>John Doe</h1>
+        <p>Student ID: SY2023IT045</p>
+      </div>
+
+      <section class="orders-section">
+        <h2>Currently Reserved</h2>
+        <div class="reserved-items" id="reservedItems">
+          <!-- Reserved items will be populated by JavaScript -->
+        </div>
+
+        <h2>Order History</h2>
+        <div class="order-history">
+          <div class="order-card">
+            <div class="order-header">
+              <span class="order-date">March 15, 2024</span>
+              <span class="order-status completed">Completed</span>
+            </div>
+            <div class="order-items">
+              <div class="order-item">
+                <img src="images/foods/burger.jpg" alt="Cheese Burger" />
+                <div class="item-details">
+                  <h3>Cheese Burger</h3>
+                  <p>₹100</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-card">
+            <div class="order-header">
+              <span class="order-date">March 14, 2024</span>
+              <span class="order-status completed">Completed</span>
+            </div>
+            <div class="order-items">
+              <div class="order-item">
+                <img src="images/foods/pizza.jpg" alt="Margherita Pizza" />
+                <div class="item-details">
+                  <h3>Margherita Pizza</h3>
+                  <p>₹200</p>
+                </div>
+              </div>
+              <div class="order-item">
+                <img src="images/foods/fries.jpg" alt="Loaded Fries" />
+                <div class="item-details">
+                  <h3>Loaded Fries</h3>
+                  <p>₹90</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Mock data for reserved items
+      const reservedItems = [
+        {
+          id: 1,
+          name: "Club Sandwich",
+          price: "₹120",
+          image: "/images/foods/sandwich.jpg",
+          reservedAt: Date.now() - 1000 * 60 * 10, // Reserved 10 minutes ago
+        },
+        {
+          id: 2,
+          name: "Margherita Pizza",
+          price: "₹200",
+          image: "/images/foods/pizza.jpg",
+          reservedAt: Date.now() - 1000 * 60 * 25, // Reserved 25 minutes ago
+        },
+      ];
+
+      // Time limit for reservations in milliseconds (30 minutes)
+      const RESERVATION_LIMIT = 30 * 60 * 1000;
+
+      function updateReservedItems() {
+        const container = document.getElementById("reservedItems");
+        container.innerHTML = "";
+
+        const now = Date.now();
+
+        reservedItems.forEach((item) => {
+          const timeElapsed = now - item.reservedAt;
+          const timeLeft = RESERVATION_LIMIT - timeElapsed;
+
+          if (timeLeft > 0) {
+            const minutes = Math.floor(timeLeft / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            const isUrgent = minutes < 5;
+
+            const reservedCard = document.createElement("div");
+            reservedCard.className = "reserved-card";
+            reservedCard.innerHTML = `
+                <div class="reserved-info">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="item-details">
+                        <h3>${item.name}</h3>
+                        <p>${item.price}</p>
+                    </div>
+                </div>
+                <div class="timer ${isUrgent ? "urgent" : ""}">
+                    ${minutes}:${seconds.toString().padStart(2, "0")} left
+                </div>
+            `;
+
+            container.appendChild(reservedCard);
+          }
+        });
+      }
+
+      // Update timers every second
+      setInterval(updateReservedItems, 1000);
+
+      // Initial update
+      updateReservedItems();
+    </script>
+  </body>
+</html>
