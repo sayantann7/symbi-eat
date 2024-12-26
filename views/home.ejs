@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SymbiEat - College Canteen</title>
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
+
 <body>
     <nav>
-        <a href="/home" style="text-decoration: none; color:inherit;"><div class="logo">SymbiEat</div></a>
+        <a href="/home" style="text-decoration: none; color: inherit">
+            <div class="logo">SymbiEat</div>
+        </a>
         <div class="profile">
-            <img src="/images/default-avatar.svg" alt="Profile" class="profile-img">
+            <img src="/images/default-avatar.svg" alt="Profile" class="profile-img" />
             <div class="dropdown">
                 <a href="/profile" class="dropdown-item">
                     <i class="fas fa-user"></i>
@@ -27,77 +31,263 @@
 
     <header>
         <div class="welcome">
-            <h1>Welcome to SymbiEat</h1>
-            <p>Delicious food, delivered with love!</p>
+            <h1>Welcome <%= name %>
+            </h1>
+            <p>What do you want to have today?</p>
         </div>
     </header>
 
     <main>
-        <section class="food-section">
-            <h2>❤️ Suggested for you</h2>
-            <div class="food-grid">
-                <div class="food-card">
-                    <div class="food-image" style="background-image: url('images/foods/sandwich.jpg')"></div>
-                    <div class="food-info">
-                        <h3>Club Sandwich</h3>
-                        <p>₹120</p>
-                        <span class="available">Available</span>
-                        <button class="reserve">Reserve Now</button>
-                    </div>
-                </div>
-                <div class="food-card">
-                    <div class="food-image" style="background-image: url('images/foods/pasta.jpg')"></div>
-                    <div class="food-info">
-                        <h3>Creamy Pasta</h3>
-                        <p>₹150</p>
-                        <span class="unavailable">Sold Out</span>
-                        <button class="notify">Notify Me</button>
-                    </div>
-                </div>
-                <div class="food-card">
-                    <div class="food-image" style="background-image: url('images/foods/burger.jpg')"></div>
-                    <div class="food-info">
-                        <h3>Cheese Burger</h3>
-                        <p>₹100</p>
-                        <span class="available">Available</span>
-                        <button class="reserve">Reserve Now</button>
-                    </div>
-                </div>
+        <!-- <section class="food-section">
+        <h2>❤️ Suggested for you</h2>
+        <div class="food-grid">
+          <div class="food-card">
+            <div
+              class="food-image"
+              style="background-image: url('images/food.jpg')"
+            ></div>
+            <div class="food-info">
+              <h3>Club Sandwich</h3>
+              <p>₹120</p>
+              <span class="available">Available</span>
+              <button class="reserve">Reserve Now</button>
             </div>
-        </section>
+          </div>
+          <div class="food-card">
+            <div
+              class="food-image"
+              style="background-image: url('images/food.jpg')"
+            ></div>
+            <div class="food-info">
+              <h3>Creamy Pasta</h3>
+              <p>₹150</p>
+              <span class="unavailable">Sold Out</span>
+              <button class="notify">Notify Me</button>
+            </div>
+          </div>
+          <div class="food-card">
+            <div
+              class="food-image"
+              style="background-image: url('images/food.jpg')"
+            ></div>
+            <div class="food-info">
+              <h3>Cheese Burger</h3>
+              <p>₹100</p>
+              <span class="available">Available</span>
+              <button class="reserve">Reserve Now</button>
+            </div>
+          </div>
+        </div>
+      </section> -->
 
         <section class="food-section">
             <h2>🔥 What's Hot?</h2>
-            <div class="food-grid">
-                <div class="food-card">
-                    <div class="food-image" style="background-image: url('images/foods/pizza.jpg')"></div>
-                    <div class="food-info">
-                        <h3>Margherita Pizza</h3>
-                        <p>₹200</p>
-                        <span class="available">Available</span>
-                        <button class="reserve">Reserve Now</button>
-                    </div>
-                </div>
-                <div class="food-card">
-                    <div class="food-image" style="background-image: url('images/foods/noodles.jpg')"></div>
-                    <div class="food-info">
-                        <h3>Schezwan Noodles</h3>
-                        <p>₹130</p>
-                        <span class="unavailable">Sold Out</span>
-                        <button class="notify">Notify Me</button>
-                    </div>
-                </div>
-                <div class="food-card">
-                    <div class="food-image" style="background-image: url('images/foods/fries.jpg')"></div>
-                    <div class="food-info">
-                        <h3>Loaded Fries</h3>
-                        <p>₹90</p>
-                        <span class="available">Available</span>
-                        <button class="reserve">Reserve Now</button>
-                    </div>
-                </div>
-            </div>
+            <% let count=0 %>
+                <% let grids=Math.ceil(foodData.length/3) %>
+                    <% for(let i=0; i<grids; i++) {%>
+                        <div class="food-grid">
+                            <% for (let j=0; j<3; j++) { %>
+                                <% if (count>= foodData.length) { break } %>
+                                    <div id="<%= count  %>" class="food-card">
+                                        <div class="food-image" style="background-image: url('images/food.jpg')"></div>
+                                        <div class="food-info">
+                                            <h3>
+                                                <%= foodData[count].name %>
+                                            </h3>
+                                            <p>₹<%= foodData[count].price %>
+                                            </p>
+                                            <span class="available">Available</span>
+                                            <button class="reserve">Reserve Now</button>
+                                        </div>
+                                    </div>
+                                    <% count++ %>
+                                        <% } %>
+                        </div>
+                        <% } %>
         </section>
     </main>
 </body>
+<script>
+    class ReservationPopup {
+        constructor() {
+            this.createPopupElement();
+            this.bindEvents();
+        }
+
+        createPopupElement() {
+            const popup = document.createElement("div");
+            popup.className = "popup-overlay";
+            popup.innerHTML = `
+            <div class="popup-content">
+                <div class="popup-header">
+                    <h2>Reserve Item</h2>
+                    <button class="close-popup">&times;</button>
+                </div>
+                <div class="food-details">
+                    <!-- Will be populated dynamically -->
+                </div>
+                <form action="/order" method="post" class="reservation-form">
+                    <div class="form-group">
+                        <label for="quantity">Quantity (remaining: <span class="remaining-count">0</span>)</label>
+                        <input name="quantity" type="number" id="quantity" min="1" max="5" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Reserve for (minutes)</label>
+                        <input name="duration" type="number" id="duration" min="5" max="30" value="15" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="total-price">
+                        Total: ₹<span class="price-amount">0</span>
+                    </div>
+                    <input id="foodInput" name="food" type="text" value="food" required hidden>
+                    <input id="priceInput" name="price" type="number"  min="5" max="30" value="0" required hidden>
+                    <button type="submit" class="confirm-btn">Confirm Reservation</button>
+                </form>
+            </div>
+        `;
+            document.body.appendChild(popup);
+            this.popup = popup;
+        }
+
+        bindEvents() {
+            this.popup
+                .querySelector(".close-popup")
+                .addEventListener("click", () => this.hide());
+            this.popup
+                .querySelector("#quantity")
+                .addEventListener("input", () => this.updateTotalPrice());
+
+            // Close popup when clicking outside
+            this.popup.addEventListener("click", (e) => {
+                if (e.target === this.popup) this.hide();
+            });
+        }
+
+        show(foodItem) {
+            this.currentItem = foodItem;
+            this.popup.style.display = "flex";
+            this.updateFoodDetails();
+        }
+
+        hide() {
+            this.popup.style.display = "none";
+            this.resetForm();
+        }
+
+        updateFoodDetails() {
+            const foodDetails = this.popup.querySelector(".food-details");
+            foodDetails.innerHTML = `
+            <img src="${this.currentItem.image}" alt="${this.currentItem.name}">
+            <div class="food-info">
+                <h3>${this.currentItem.name}</h3>
+                <p>₹${this.currentItem.price}</p>
+            </div>
+        `;
+
+            // Update remaining count
+            this.popup.querySelector(".remaining-count").textContent =
+                this.currentItem.remaining;
+
+            // Update max quantity
+            const quantityInput = this.popup.querySelector("#quantity");
+            quantityInput.max = Math.min(5, this.currentItem.remaining);
+
+            this.updateTotalPrice();
+        }
+
+        updateTotalPrice() {
+            const quantity = parseInt(this.popup.querySelector("#quantity").value);
+            const totalPrice = quantity * this.currentItem.price;
+            this.popup.querySelector(".price-amount").textContent = totalPrice;
+        }
+
+        resetForm() {
+            this.popup.querySelector(".reservation-form").reset();
+            this.popup.querySelector(".error-message").textContent = "";
+        }
+
+        handleSubmit(e) {
+            e.preventDefault();
+
+            const quantity = parseInt(this.popup.querySelector("#quantity").value);
+            const duration = parseInt(this.popup.querySelector("#duration").value);
+            const errorElement = this.popup.querySelector(".error-message");
+
+            if (duration > 30) {
+                errorElement.textContent = "Maximum reservation time is 30 minutes";
+                return;
+            }
+
+            if (quantity > this.currentItem.remaining) {
+                errorElement.textContent = "Quantity exceeds available items";
+                return;
+            }
+
+            // Handle successful reservation
+            const reservation = {
+                itemId: this.currentItem.id,
+                quantity,
+                duration,
+                timestamp: Date.now(),
+            };
+
+            // Dispatch custom event with reservation details
+            const event = new CustomEvent("reservation-confirmed", {
+                detail: reservation,
+            });
+            document.dispatchEvent(event);
+
+            this.hide();
+        }
+    }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const popup = new ReservationPopup();
+
+            // Attach to all reserve buttons
+            document.querySelectorAll(".reserve").forEach((button) => {
+                button.addEventListener("click", async () => {
+                    const card = button.closest(".food-card");
+                    const foodItem = {
+                        id: card.id,
+                        name: card.querySelector("h3").textContent,
+                        price: parseInt(card.querySelector("p").textContent.replace("₹", "")),
+                        image: card
+                            .querySelector(".food-image")
+                            .style.backgroundImage.slice(5, -2),
+                        remaining: 0, // This will be update from backend
+                    };
+
+                    // Fetch data asynchronously
+                    async function fetchData() {
+                        try {
+                            const response = await fetch('/api/food');
+                            const data = await response.json();
+                            for (const item of data) {
+                                if (item.price === foodItem.price) {
+                                    return item.quantity;
+                                }
+                            }
+                            return 0; // Default value if not found
+                        } catch (error) {
+                            console.error("Error fetching data:", error);
+                            return 0; // Default value in case of error
+                        }
+                    }
+
+                    foodItem.remaining = await fetchData();
+
+                    //handling food input inside the form
+                    let foodInput = document.getElementById("foodInput");
+                    foodInput.value = foodItem.name;
+
+                    let priceInput = document.getElementById("priceInput");
+                    priceInput.value = foodItem.price;
+                    
+                    popup.show(foodItem);
+                });
+            });
+        });
+</script>
+
 </html>

@@ -1,117 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile - SymbiEat</title>
-    <link rel="stylesheet" href="styles/style.css" />
-    <link rel="stylesheet" href="styles/profile.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
-  </head>
-  <body>
-    <nav>
-      <a href="/home" style="text-decoration: none; color:inherit;"><div class="logo">SymbiEat</div></a>
-      <div class="profile">
-        <img
-          src="images/default-avatar.svg"
-          alt="Profile"
-          class="profile-img"
-        />
-        <div class="dropdown">
-          <a href="/home" class="dropdown-item">
-            <i class="fas fa-home"></i>
-            Home
-          </a>
-          <a href="/logout" class="dropdown-item">
-            <i class="fas fa-sign-out-alt"></i>
-            Logout
-          </a>
-        </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile - SymbiEat</title>
+  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/profile.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+  <nav>
+    <a href="/home" style="text-decoration: none; color:inherit;">
+      <div class="logo">SymbiEat</div>
+    </a>
+    <div class="profile">
+      <img src="images/default-avatar.svg" alt="Profile" class="profile-img" />
+      <div class="dropdown">
+        <a href="/home" class="dropdown-item">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+        <a href="/logout" class="dropdown-item">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </a>
       </div>
-    </nav>
+    </div>
+  </nav>
 
-    <main class="profile-main">
-      <div class="profile-header">
-        <img
-          src="images/default-avatar.svg"
-          alt="Profile"
-          class="large-profile-img"
-        />
-        <h1>John Doe</h1>
-        <p>Student ID: SY2023IT045</p>
+  <main class="profile-main">
+    <div class="profile-header">
+      <img src="images/default-avatar.svg" alt="Profile" class="large-profile-img" />
+      <h1>
+        <%= user.fullName %>
+      </h1>
+      <p>PRN: <%= user.username %>
+      </p>
+    </div>
+
+    <section class="orders-section">
+      <h2>Currently Reserved</h2>
+      <div class="reserved-items" id="reservedItems">
+        <!-- Reserved items will be populated by JavaScript -->
       </div>
 
-      <section class="orders-section">
-        <h2>Currently Reserved</h2>
-        <div class="reserved-items" id="reservedItems">
-          <!-- Reserved items will be populated by JavaScript -->
-        </div>
-
-        <h2>Order History</h2>
-        <div class="order-history">
-          <div class="order-card">
-            <div class="order-header">
-              <span class="order-date">March 15, 2024</span>
-              <span class="order-status completed">Completed</span>
-            </div>
-            <div class="order-items">
-              <div class="order-item">
-                <img src="images/foods/burger.jpg" alt="Cheese Burger" />
-                <div class="item-details">
-                  <h3>Cheese Burger</h3>
-                  <p>₹100</p>
-                </div>
-              </div>
-            </div>
+      <h2>Order History</h2>
+      <div class="order-history">
+        <div class="order-card">
+          <div class="order-header">
+            <span class="order-date">March 15, 2024</span>
+            <span class="order-status completed">Completed</span>
           </div>
-
-          <div class="order-card">
-            <div class="order-header">
-              <span class="order-date">March 14, 2024</span>
-              <span class="order-status completed">Completed</span>
-            </div>
-            <div class="order-items">
-              <div class="order-item">
-                <img src="images/foods/pizza.jpg" alt="Margherita Pizza" />
-                <div class="item-details">
-                  <h3>Margherita Pizza</h3>
-                  <p>₹200</p>
-                </div>
-              </div>
-              <div class="order-item">
-                <img src="images/foods/fries.jpg" alt="Loaded Fries" />
-                <div class="item-details">
-                  <h3>Loaded Fries</h3>
-                  <p>₹90</p>
-                </div>
+          <div class="order-items">
+            <div class="order-item">
+              <img src="images/food.jpg" alt="Cheese Burger" />
+              <div class="item-details">
+                <h3>Cheese Burger</h3>
+                <p>₹100</p>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    </main>
 
-    <script>
-      // Mock data for reserved items
-      const reservedItems = [
-        {
-          id: 1,
-          name: "Club Sandwich",
-          price: "₹120",
-          image: "/images/foods/sandwich.jpg",
-          reservedAt: Date.now() - 1000 * 60 * 10, // Reserved 10 minutes ago
-        },
-        {
-          id: 2,
-          name: "Margherita Pizza",
-          price: "₹200",
-          image: "/images/foods/pizza.jpg",
-          reservedAt: Date.now() - 1000 * 60 * 25, // Reserved 25 minutes ago
-        },
-      ];
+        <div class="order-card">
+          <div class="order-header">
+            <span class="order-date">March 14, 2024</span>
+            <span class="order-status completed">Completed</span>
+          </div>
+          <div class="order-items">
+            <div class="order-item">
+              <img src="images/food.jpg" alt="Margherita Pizza" />
+              <div class="item-details">
+                <h3>Margherita Pizza</h3>
+                <p>₹200</p>
+              </div>
+            </div>
+            <div class="order-item">
+              <img src="images/food.jpg" alt="Loaded Fries" />
+              <div class="item-details">
+                <h3>Loaded Fries</h3>
+                <p>₹90</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      async function fetchReservations() {
+        try {
+          const response = await fetch('/api/reservations');
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          return null;
+        }
+      }
+      const reservedItems = await fetchReservations();
+      console.log(reservedItems);
 
       // Time limit for reservations in milliseconds (30 minutes)
       const RESERVATION_LIMIT = 30 * 60 * 1000;
@@ -123,8 +115,12 @@
         const now = Date.now();
 
         reservedItems.forEach((item) => {
-          const timeElapsed = now - item.reservedAt;
-          const timeLeft = RESERVATION_LIMIT - timeElapsed;
+          const itemDate = new Date(item.date);
+          let endTime = (new Date(itemDate.getTime() + item.duration * 60 * 1000)).toISOString();
+          endTime = new Date(endTime);
+          const timeLeft = endTime - Date.now();
+
+          console.log(endTime);
 
           if (timeLeft > 0) {
             const minutes = Math.floor(timeLeft / (1000 * 60));
@@ -132,14 +128,16 @@
 
             const isUrgent = minutes < 5;
 
+            console.log(minutes,seconds);
+
             const reservedCard = document.createElement("div");
             reservedCard.className = "reserved-card";
             reservedCard.innerHTML = `
                 <div class="reserved-info">
-                    <img src="${item.image}" alt="${item.name}">
+                    <img src="images/food.jpg" alt="${item.name}">
                     <div class="item-details">
                         <h3>${item.name}</h3>
-                        <p>${item.price}</p>
+                        <p>${item.quantity} pc (₹${item.price}*${item.quantity})</p>
                     </div>
                 </div>
                 <div class="timer ${isUrgent ? "urgent" : ""}">
@@ -157,6 +155,8 @@
 
       // Initial update
       updateReservedItems();
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>
