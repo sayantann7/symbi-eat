@@ -36,8 +36,6 @@
       <h1>
         <%= user.fullName %>
       </h1>
-      <p>PRN: <%= user.username %>
-      </p>
     </div>
 
     <section class="orders-section">
@@ -48,49 +46,100 @@
 
       <h2>Order History</h2>
       <div class="order-history">
-        <div class="order-card">
-          <div class="order-header">
-            <span class="order-date">March 15, 2024</span>
-            <span class="order-status completed">Completed</span>
-          </div>
-          <div class="order-items">
-            <div class="order-item">
-              <img src="images/food.jpg" alt="Cheese Burger" />
-              <div class="item-details">
-                <h3>Cheese Burger</h3>
-                <p>₹100</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="order-card">
-          <div class="order-header">
-            <span class="order-date">March 14, 2024</span>
-            <span class="order-status completed">Completed</span>
-          </div>
-          <div class="order-items">
-            <div class="order-item">
-              <img src="images/food.jpg" alt="Margherita Pizza" />
-              <div class="item-details">
-                <h3>Margherita Pizza</h3>
-                <p>₹200</p>
-              </div>
-            </div>
-            <div class="order-item">
-              <img src="images/food.jpg" alt="Loaded Fries" />
-              <div class="item-details">
-                <h3>Loaded Fries</h3>
-                <p>₹90</p>
-              </div>
-            </div>
-          </div>
-        </div>
+          <% if (user.orders.length===0) { %>
+            <h3>No orders found</h3>
+            <% } else { %>
+              <% user.orders.forEach((order)=> { %>
+                <div class="order-card">
+                  <div class="order-header">
+                      <span class="order-date"><%= formatDate(order.date) %></span>
+                  </div>
+                  <div class="order-items">
+                      <div class="order-item">
+                          <img src="/images/food.jpg" alt="<%= order.name %>">
+                          <div class="item-details">
+                              <h3><%= order.name %></h3>
+                              <p><%= order.quantity %> pc (₹<%= order.price*order.quantity %>)</p>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                  <% }); %>
+                      <% } %>
       </div>
     </section>
   </main>
 
   <script>
+    async function handleAcceptOrder(itemId) {
+      try {
+        async function fetchReservations() {
+          try {
+            const response = await fetch('/api/reservations');
+            const data = await response.json();
+            return data;
+          } catch (error) {
+            console.error("Error fetching data:", error);
+            return null;
+          }
+        }
+
+        const reservedItems = await fetchReservations();
+        const response = await fetch(`/confirm-reservation`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ itemId })
+        });
+
+        console.log(response);
+
+        console.log(reservedItems);
+
+        const index = reservedItems.findIndex(item => item._id === itemId);
+        location.reload();
+      } catch (error) {
+        console.error('Error accepting order:', error);
+        alert('Failed to accept order. Please try again.');
+      }
+    }
+
+    async function handleCancelReservation(itemId) {
+      try {
+        async function fetchReservations() {
+          try {
+            const response = await fetch('/api/reservations');
+            const data = await response.json();
+            return data;
+          } catch (error) {
+            console.error("Error fetching data:", error);
+            return null;
+          }
+        }
+
+        const reservedItems = await fetchReservations();
+        console.log(reservedItems);
+        const response = await fetch(`/cancel-reservation`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ itemId })
+        });
+
+        console.log(response);
+
+        console.log(reservedItems);
+
+        const index = reservedItems.findIndex(item => item._id === itemId);
+        location.reload();
+      } catch (error) {
+        console.error('Error canceling reservation:', error);
+        alert('Failed to cancel reservation. Please try again.');
+      }
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
       async function fetchReservations() {
         try {
@@ -102,59 +151,68 @@
           return null;
         }
       }
-      const reservedItems = await fetchReservations();
-      console.log(reservedItems);
 
-      // Time limit for reservations in milliseconds (30 minutes)
+      const reservedItems = await fetchReservations();
       const RESERVATION_LIMIT = 30 * 60 * 1000;
 
-      function updateReservedItems() {
-        const container = document.getElementById("reservedItems");
-        container.innerHTML = "";
+      if (reservedItems.length === 0) {
+        const reservedCard = document.querySelector(".reserved-items");
+        reservedCard.innerHTML = "<h3>No reservations found</h3>";
+      }
+      else {
 
-        const now = Date.now();
+        function updateReservedItems() {
+          const container = document.getElementById("reservedItems");
+          container.innerHTML = "";
 
-        reservedItems.forEach((item) => {
-          const itemDate = new Date(item.date);
-          let endTime = (new Date(itemDate.getTime() + item.duration * 60 * 1000)).toISOString();
-          endTime = new Date(endTime);
-          const timeLeft = endTime - Date.now();
+          const now = Date.now();
 
-          console.log(endTime);
+          reservedItems.forEach((item) => {
+            const itemDate = new Date(item.date);
+            const endTime = new Date(itemDate.getTime() + item.duration * 60 * 1000);
+            const timeLeft = endTime - now;
 
-          if (timeLeft > 0) {
-            const minutes = Math.floor(timeLeft / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            if (timeLeft > 0) {
+              const minutes = Math.floor(timeLeft / (1000 * 60));
+              const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+              const isUrgent = minutes < 5;
+              const totPrice = item.price * item.quantity;
 
-            const isUrgent = minutes < 5;
-
-            console.log(minutes,seconds);
-
-            const reservedCard = document.createElement("div");
-            reservedCard.className = "reserved-card";
-            reservedCard.innerHTML = `
-                <div class="reserved-info">
-                    <img src="images/food.jpg" alt="${item.name}">
-                    <div class="item-details">
-                        <h3>${item.name}</h3>
-                        <p>${item.quantity} pc (₹${item.price}*${item.quantity})</p>
-                    </div>
+              const reservedCard = document.createElement("div");
+              reservedCard.className = "reserved-card";
+              reservedCard.innerHTML = `
+              <div class="reserved-info">
+                <img src="images/food.jpg" alt="${item.name}">
+                <div class="item-details">
+                  <h3>${item.name}</h3>
+                  <p>${item.quantity} pc (₹${totPrice})</p>
                 </div>
-                <div class="timer ${isUrgent ? "urgent" : ""}">
-                    ${minutes}:${seconds.toString().padStart(2, "0")} left
+              </div>
+              <div class="timer ${isUrgent ? "urgent" : ""}">
+                ${minutes}:${seconds.toString().padStart(2, "0")} left
+              </div>
+              <div class="reservation-actions">
+                <div class="action-buttons">
+                  <button class="accept-btn" onclick="handleAcceptOrder('${item._id}')">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button class="cancel-btn" onclick="handleCancelReservation('${item._id}')">
+                    <i class="fas fa-times"></i>
+                  </button>
                 </div>
+              </div>
             `;
 
-            container.appendChild(reservedCard);
-          }
-        });
+              container.appendChild(reservedCard);
+            } else {
+              handleCancelReservation(item._id);
+            }
+          });
+        }
+
+        setInterval(updateReservedItems, 1000);
+        updateReservedItems();
       }
-
-      // Update timers every second
-      setInterval(updateReservedItems, 1000);
-
-      // Initial update
-      updateReservedItems();
     });
   </script>
 </body>

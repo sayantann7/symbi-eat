@@ -139,8 +139,8 @@
                     <div class="total-price">
                         Total: ₹<span class="price-amount">0</span>
                     </div>
-                    <input id="foodInput" name="food" type="text" value="food" required hidden>
-                    <input id="priceInput" name="price" type="number"  min="5" max="30" value="0" required hidden>
+                    <input id="foodInput" name="food" type="text" value="food" hidden>
+                    <input id="priceInput" name="price" type="number" value="0" hidden>
                     <button type="submit" class="confirm-btn">Confirm Reservation</button>
                 </form>
             </div>
@@ -241,53 +241,53 @@
         }
     }
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            const popup = new ReservationPopup();
+    document.addEventListener("DOMContentLoaded", async () => {
+        const popup = new ReservationPopup();
 
-            // Attach to all reserve buttons
-            document.querySelectorAll(".reserve").forEach((button) => {
-                button.addEventListener("click", async () => {
-                    const card = button.closest(".food-card");
-                    const foodItem = {
-                        id: card.id,
-                        name: card.querySelector("h3").textContent,
-                        price: parseInt(card.querySelector("p").textContent.replace("₹", "")),
-                        image: card
-                            .querySelector(".food-image")
-                            .style.backgroundImage.slice(5, -2),
-                        remaining: 0, // This will be update from backend
-                    };
+        // Attach to all reserve buttons
+        document.querySelectorAll(".reserve").forEach((button) => {
+            button.addEventListener("click", async () => {
+                const card = button.closest(".food-card");
+                const foodItem = {
+                    id: card.id,
+                    name: card.querySelector("h3").textContent,
+                    price: parseInt(card.querySelector("p").textContent.replace("₹", "")),
+                    image: card
+                        .querySelector(".food-image")
+                        .style.backgroundImage.slice(5, -2),
+                    remaining: 0, // This will be update from backend
+                };
 
-                    // Fetch data asynchronously
-                    async function fetchData() {
-                        try {
-                            const response = await fetch('/api/food');
-                            const data = await response.json();
-                            for (const item of data) {
-                                if (item.price === foodItem.price) {
-                                    return item.quantity;
-                                }
+                // Fetch data asynchronously
+                async function fetchData() {
+                    try {
+                        const response = await fetch('/api/food');
+                        const data = await response.json();
+                        for (const item of data) {
+                            if (item.price === foodItem.price) {
+                                return item.quantity;
                             }
-                            return 0; // Default value if not found
-                        } catch (error) {
-                            console.error("Error fetching data:", error);
-                            return 0; // Default value in case of error
                         }
+                        return 0; // Default value if not found
+                    } catch (error) {
+                        console.error("Error fetching data:", error);
+                        return 0; // Default value in case of error
                     }
+                }
 
-                    foodItem.remaining = await fetchData();
+                foodItem.remaining = await fetchData();
 
-                    //handling food input inside the form
-                    let foodInput = document.getElementById("foodInput");
-                    foodInput.value = foodItem.name;
+                //handling food input inside the form
+                let foodInput = document.getElementById("foodInput");
+                foodInput.value = foodItem.name;
 
-                    let priceInput = document.getElementById("priceInput");
-                    priceInput.value = foodItem.price;
-                    
-                    popup.show(foodItem);
-                });
+                let priceInput = document.getElementById("priceInput");
+                priceInput.value = foodItem.price;
+
+                popup.show(foodItem);
             });
         });
+    });
 </script>
 
 </html>
