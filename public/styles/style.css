@@ -404,3 +404,20 @@ button {
         transform: scale(1);
     }
 }
+
+.footer {
+    background-color: var(--primary);
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+}
+
+.footer p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.footer span {
+    font-weight: 500;
+}
