@@ -206,12 +206,44 @@ app.post('/cancel-reservation', isLoggedIn, async (req, res) => {
 });
 
 app.get('/profile', isLoggedIn, async (req, res) => {
+    const now = Date.now();
+
     const user = await userModel.findOne({
         username: req.session.passport.user,
     });
+
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    const reservations = await reservationModel.find({
+        user: user._id // Ensure the user field is populated with a valid ObjectId
+    });
+
+    for (const item of reservations) {
+        const itemDate = new Date(item.date);
+        const endTime = new Date(itemDate.getTime() + item.duration * 60 * 1000);
+        const timeLeft = endTime - now;
+        const minutes = Math.floor(timeLeft / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        if (minutes < 0 && seconds < 0) {
+            try {
+                const result = await reservationModel.findByIdAndDelete(item._id);
+                if (result) {
+                    console.log('Reservation deleted:', result);
+                } else {
+                    console.log('No reservation found with the given id');
+                }
+            } catch (error) {
+                console.error('Error deleting reservation:', error);
+            }
+        }
+    }
+
     await user.populate('reservations');
     await user.populate('orders');
-    res.render("profile", { user : user, formatDate : formatDate });
+    res.render("profile", { user: user, formatDate: formatDate });
 });
 
 app.get('/logout', (req, res, next) => {
