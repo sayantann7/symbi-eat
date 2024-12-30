@@ -167,3 +167,10 @@
 body{
     background: linear-gradient(135deg, var(--primary), #ff6b81);
 }
+
+.alert-danger {
+    color: #a70019;
+    padding: 0;
+    border-radius: 5px;
+    margin-bottom: 25px;
+}

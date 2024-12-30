@@ -9,9 +9,9 @@ const orderModel = require('./models/orders');
 const localStrategy = require('passport-local');
 const session = require('session');
 const expressSession = require('express-session');
-const { name } = require('ejs');
 passport.use(new localStrategy(userModel.authenticate()));
 const bodyParser = require('body-parser');
+const flash = require('connect-flash');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -31,6 +31,13 @@ passport.deserializeUser(userModel.deserializeUser());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
 
 app.post("/register", (req, res) => {
     let userData = new userModel({
@@ -50,7 +57,8 @@ app.post("/register", (req, res) => {
 
 app.post('/login', passport.authenticate("local", {
     successRedirect: '/home',
-    failureRedirect: '/'
+    failureRedirect: '/',
+    failureFlash: true
 }), function (req, res) { });
 
 app.get('/', (req, res) => {
@@ -242,7 +250,10 @@ app.get('/profile', isLoggedIn, async (req, res) => {
     }
 
     await user.populate('reservations');
-    await user.populate('orders');
+    await user.populate({
+        path: 'orders',
+        options: { sort: { date: -1 } }
+    });
     res.render("profile", { user: user, formatDate: formatDate });
 });
 

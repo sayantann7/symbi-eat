@@ -21,6 +21,12 @@
                 <p>Sign in to continue to SymbiEat</p>
             </div>
 
+            <% if (error) { %>
+                <div class="alert-danger">
+                    <%= error %>
+                </div>
+            <% } %>
+
             <form action="/login" method="post" class="auth-form">
                 <div class="form-group">
                     <div class="input-icon">
