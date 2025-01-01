@@ -74,150 +74,117 @@
 </footer>
 </body>
 
-  <script>
-    async function handleAcceptOrder(itemId) {
+<script>
+  async function handleAcceptOrder(itemId) {
+    try {
+      const response = await fetch(`/confirm-reservation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ itemId })
+      });
+
+      location.reload();
+    } catch (error) {
+      console.error('Error accepting order:', error);
+      alert('Failed to accept order. Please try again.');
+    }
+  }
+
+  async function handleCancelReservation(itemId) {
+    try {
+      const response = await fetch(`/cancel-reservation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ itemId })
+      });
+
+      location.reload();
+    } catch (error) {
+      console.error('Error canceling reservation:', error);
+      alert('Failed to cancel reservation. Please try again.');
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    async function fetchReservations() {
       try {
-        async function fetchReservations() {
-          try {
-            const response = await fetch('/api/reservations');
-            const data = await response.json();
-            return data;
-          } catch (error) {
-            console.error("Error fetching data:", error);
-            return null;
-          }
-        }
-
-        const reservedItems = await fetchReservations();
-        const response = await fetch(`/confirm-reservation`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ itemId })
-        });
-
-        console.log(response);
-
-        console.log(reservedItems);
-
-        const index = reservedItems.findIndex(item => item._id === itemId);
-        location.reload();
+        const response = await fetch('/api/reservations');
+        const data = await response.json();
+        return data;
       } catch (error) {
-        console.error('Error accepting order:', error);
-        alert('Failed to accept order. Please try again.');
+        console.error("Error fetching data:", error);
+        return null;
       }
     }
 
-    async function handleCancelReservation(itemId) {
-      try {
-        async function fetchReservations() {
-          try {
-            const response = await fetch('/api/reservations');
-            const data = await response.json();
-            return data;
-          } catch (error) {
-            console.error("Error fetching data:", error);
-            return null;
+    const reservedItems = await fetchReservations();
+    const RESERVATION_LIMIT = 30 * 60 * 1000;
+
+    if (reservedItems.length === 0) {
+      const reservedCard = document.querySelector(".reserved-items");
+      reservedCard.innerHTML = "<h3>No reservations found</h3>";
+    } else {
+      const container = document.getElementById("reservedItems");
+      container.innerHTML = "";
+
+      reservedItems.forEach((item) => {
+        const reservedCard = document.createElement("div");
+        reservedCard.className = "reserved-card";
+        reservedCard.innerHTML = `
+          <div class="reserved-info">
+            <img src="images/food.jpg" alt="${item.name}">
+            <div class="item-details">
+              <h3>${item.name}</h3>
+              <p>${item.quantity} pc (₹${item.price * item.quantity})</p>
+            </div>
+          </div>
+          <div class="timer" id="timer-${item._id}">
+            <!-- Timer text will be updated here -->
+          </div>
+          <div class="reservation-actions">
+            <div class="action-buttons">
+              <button class="accept-btn" onclick="handleAcceptOrder('${item._id}')">
+                <i class="fas fa-check"></i>
+              </button>
+              <button class="cancel-btn" onclick="handleCancelReservation('${item._id}')">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(reservedCard);
+      });
+
+      function updateTimers() {
+        const now = Date.now();
+
+        reservedItems.forEach((item) => {
+          const itemDate = new Date(item.date);
+          const endTime = new Date(itemDate.getTime() + item.duration * 60 * 1000);
+          const timeLeft = endTime - now;
+
+          const timerElement = document.getElementById(`timer-${item._id}`);
+          if (timeLeft > 0) {
+            const minutes = Math.floor(timeLeft / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            const isUrgent = minutes < 5;
+
+            timerElement.className = `timer ${isUrgent ? "urgent" : ""}`;
+            timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, "0")} left`;
+          } else {
+            handleCancelReservation(item._id);
           }
-        }
-
-        const reservedItems = await fetchReservations();
-        console.log(reservedItems);
-        const response = await fetch(`/cancel-reservation`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ itemId })
         });
-
-        console.log(response);
-
-        console.log(reservedItems);
-
-        const index = reservedItems.findIndex(item => item._id === itemId);
-        location.reload();
-      } catch (error) {
-        console.error('Error canceling reservation:', error);
-        alert('Failed to cancel reservation. Please try again.');
       }
+
+      setInterval(updateTimers, 1000);
+      updateTimers();
     }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      async function fetchReservations() {
-        try {
-          const response = await fetch('/api/reservations');
-          const data = await response.json();
-          return data;
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          return null;
-        }
-      }
-
-      const reservedItems = await fetchReservations();
-      const RESERVATION_LIMIT = 30 * 60 * 1000;
-
-      if (reservedItems.length === 0) {
-        const reservedCard = document.querySelector(".reserved-items");
-        reservedCard.innerHTML = "<h3>No reservations found</h3>";
-      }
-      else {
-
-        function updateReservedItems() {
-          const container = document.getElementById("reservedItems");
-          container.innerHTML = "";
-
-          const now = Date.now();
-
-          reservedItems.forEach((item) => {
-            const itemDate = new Date(item.date);
-            const endTime = new Date(itemDate.getTime() + item.duration * 60 * 1000);
-            const timeLeft = endTime - now;
-
-            if (timeLeft > 0) {
-              const minutes = Math.floor(timeLeft / (1000 * 60));
-              const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-              const isUrgent = minutes < 5;
-              const totPrice = item.price * item.quantity;
-
-              const reservedCard = document.createElement("div");
-              reservedCard.className = "reserved-card";
-              reservedCard.innerHTML = `
-              <div class="reserved-info">
-                <img src="images/food.jpg" alt="${item.name}">
-                <div class="item-details">
-                  <h3>${item.name}</h3>
-                  <p>${item.quantity} pc (₹${totPrice})</p>
-                </div>
-              </div>
-              <div class="timer ${isUrgent ? "urgent" : ""}">
-                ${minutes}:${seconds.toString().padStart(2, "0")} left
-              </div>
-              <div class="reservation-actions">
-                <div class="action-buttons">
-                  <button class="accept-btn" onclick="handleAcceptOrder('${item._id}')">
-                    <i class="fas fa-check"></i>
-                  </button>
-                  <button class="cancel-btn" onclick="handleCancelReservation('${item._id}')">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-            `;
-
-              container.appendChild(reservedCard);
-            } else {
-              handleCancelReservation(item._id);
-            }
-          });
-        }
-
-        setInterval(updateReservedItems, 1000);
-        updateReservedItems();
-      }
-    });
-  </script>
-
+  });
+</script>
 </html>
