@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 const plm = require('passport-local-mongoose');
+require('dotenv').config();
 
-mongoose.connect("mongodb://127.0.0.1:27017/symbi-eat");
+const mongoURI = process.env.MONGODB_URI;
+
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 const userSchema = new mongoose.Schema({
   fullName: {
