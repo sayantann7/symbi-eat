@@ -81,7 +81,8 @@
       </section> -->
 
         <section class="food-section">
-            <h2>🔥 What's Hot?</h2>
+            <% if (foodData!=null) {%>
+                <h2>🔥 What's Hot?</h2>
             <% let count=0 %>
                 <% let grids=Math.ceil(foodData.length/3) %>
                     <% for(let i=0; i<grids; i++) {%>
@@ -89,7 +90,7 @@
                             <% for (let j=0; j<3; j++) { %>
                                 <% if (count>= foodData.length) { break } %>
                                     <div id="<%= count  %>" class="food-card">
-                                        <div class="food-image" style="background-image: url('images/food.jpg')"></div>
+                                        <div class="food-image" style="background-image: url('<%= foodData[count].image %>')"></div>
                                         <div class="food-info">
                                             <h3>
                                                 <%= foodData[count].name %>
@@ -104,6 +105,9 @@
                                         <% } %>
                         </div>
                         <% } %>
+            <% }else { %>
+                <h2>Nothing on the menu rn...</h2>
+            <% } %>
         </section>
     </main>
     <footer class="footer">

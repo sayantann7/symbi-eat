@@ -56,7 +56,7 @@
                   </div>
                   <div class="order-items">
                       <div class="order-item">
-                          <img src="/images/food.jpg" alt="<%= order.name %>">
+                          <img src="<%= order.image %>" alt="<%= order.name %>">
                           <div class="item-details">
                               <h3><%= order.name %></h3>
                               <p><%= order.quantity %> pc (₹<%= order.price*order.quantity %>)</p>
@@ -136,7 +136,7 @@
         reservedCard.className = "reserved-card";
         reservedCard.innerHTML = `
           <div class="reserved-info">
-            <img src="images/food.jpg" alt="${item.name}">
+            <img src="${item.image}" alt="${item.name}">
             <div class="item-details">
               <h3>${item.name}</h3>
               <p>${item.quantity} pc (₹${item.price * item.quantity})</p>
