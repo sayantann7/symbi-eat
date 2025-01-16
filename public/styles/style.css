@@ -208,7 +208,7 @@ button {
     transition: all 0.3s ease;
 }
 
-.reserve {
+.reserve, .notify {
     background-color: var(--primary);
     color: white;
 }
@@ -217,13 +217,8 @@ button {
     background-color: #ff6b81;
 }
 
-.notify {
-    background-color: var(--secondary);
-    color: white;
-}
-
 .notify:hover {
-    background-color: #3d4553;
+    background-color: #ff6b81;
 }
 
 @keyframes fadeIn {

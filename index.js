@@ -13,6 +13,8 @@ passport.use(new localStrategy(userModel.authenticate()));
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const multer = require("multer");
+const nodemailer = require('nodemailer');
+require("dotenv").config();
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -112,7 +114,11 @@ app.get("/home", isLoggedIn, async (req, res) => {
     }
     name += user.fullName[i];
   }
-  res.render("home", { user: user, name: name, foodData: inventory != null ? inventory.foodItems : null, });
+  res.render("home", {
+    user: user,
+    name: name,
+    foodData: inventory != null ? inventory.foodItems : null,
+  });
 });
 
 app.get("/api/food", async (req, res) => {
@@ -238,6 +244,53 @@ app.post("/cancel-reservation", isLoggedIn, async (req, res) => {
   } catch (error) {
     console.error("Error canceling reservation:", error);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/notify/:itemID", isLoggedIn, async (req, res) => {
+  try {
+    const { itemID } = req.params;
+    const inventory = await inventoryModel.findOne({});
+    const foodItem = inventory.foodItems[itemID];
+
+    const user = await userModel.findOne({
+      username: req.session.passport.user,
+    });
+
+    if (!foodItem) {
+      return res.status(404).send("Food item not found");
+    }
+
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: true, 
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EmailPassword
+      },
+      connectionTimeout: 10000, // 10 seconds
+      greetingTimeout: 10000, // 10 seconds
+      socketTimeout: 10000 // 10 seconds
+    });
+
+    // Setup email data
+    let mailOptions = {
+      from: process.env.EMAIL, // sender address
+      to: user.email, // list of receivers
+      subject: 'Food Item Notification', // Subject line
+      text: `We received a request to notify you about the avaliability of ${foodItem.name}. We'll email soon when it's available.`, // plain text body
+    };
+
+    // Send mail with defined transport object
+    let info = await transporter.sendMail(mailOptions);
+
+    console.log('Message sent: %s', info.messageId);
+
+    res.status(200).send("Notifications sent");
+  } catch (error) {
+    console.error("Error sending notifications:", error);
+    res.status(500).send(error);
   }
 });
 

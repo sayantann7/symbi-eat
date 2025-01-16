@@ -97,8 +97,13 @@
                                             </h3>
                                             <p>₹<%= foodData[count].price %>
                                             </p>
-                                            <span class="available">Available</span>
-                                            <button class="reserve">Reserve Now</button>
+                                            <% if (foodData[count].quantity>0){ %>
+                                                <span class="available">Available</span>
+                                                <button class="reserve">Reserve Now</button>
+                                            <% } else { %>
+                                                <span class="unavailable">Unavailable</span>
+                                                <button class="notify">Notify Later</button>
+                                            <% } %>
                                         </div>
                                     </div>
                                     <% count++ %>
@@ -248,8 +253,62 @@
         }
     }
 
+    class NotifyPopup {
+        constructor() {
+            this.createPopupElement();
+            this.bindEvents();
+        }
+
+        createPopupElement() {
+            const popup = document.createElement("div");
+            popup.className = "popup-overlay notify-popup-overlay";
+            popup.innerHTML = `
+            <div class="popup-content notify-popup">
+                <div class="popup-header">
+                    <h4>Once the item restocks you will be notified via your registered email.</h4>
+            </div>
+        `;
+            document.body.appendChild(popup);
+            this.popup = popup;
+        }
+
+        bindEvents() {
+
+            // Close popup when clicking outside
+            this.popup.addEventListener("click", (e) => {
+                if (e.target === this.popup) this.hide();
+            });
+        }
+
+        show() {
+        this.popup.style.display = "flex";
+        }
+
+        hide() {
+            this.popup.style.display = "none";
+        }
+    }
+    
     document.addEventListener("DOMContentLoaded", async () => {
         const popup = new ReservationPopup();
+
+        const notifyPopup = new NotifyPopup();
+
+        document.querySelectorAll(".notify").forEach((button) => {
+            button.addEventListener("click", async () => {
+                notifyPopup.show();
+                const card = button.closest(".food-card");
+                const foodID = card.id;
+                const response = await fetch(`/notify/${foodID}`);
+
+                if (response.ok) {
+                    console.log("Notification sent successfully");
+                } else {
+                    console.error("Failed to send notification");
+                }
+            });
+        });
+
 
         // Attach to all reserve buttons
         document.querySelectorAll(".reserve").forEach((button) => {
