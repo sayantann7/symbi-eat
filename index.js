@@ -13,8 +13,9 @@ passport.use(new localStrategy(userModel.authenticate()));
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const multer = require("multer");
-const nodemailer = require('nodemailer');
 require("dotenv").config();
+const twilio = require('twilio');
+const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -71,6 +72,7 @@ app.post("/register", (req, res) => {
   let userData = new userModel({
     fullName: req.body.fullName,
     username: req.body.prn,
+    phoneNumber: `+91${req.body.phone}`,
     email: req.body.email,
     secret: req.body.secret,
   });
@@ -261,36 +263,22 @@ app.get("/notify/:itemID", isLoggedIn, async (req, res) => {
       return res.status(404).send("Food item not found");
     }
 
-    let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: true, 
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EmailPassword
-      },
-      connectionTimeout: 10000, // 10 seconds
-      greetingTimeout: 10000, // 10 seconds
-      socketTimeout: 10000 // 10 seconds
+    // Send SMS notification
+    client.messages.create({
+      body: `We received a request to notify you about the avaliability of ${foodItem.name}. We'll send a sms soon when it's available.`,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: user.phoneNumber
+    }).then(message => {
+      console.log(`Message sent: ${message.sid}`);
+      res.status(200).send("Notification sent");
+    }).catch(error => {
+      console.error("Error sending SMS:", error);
+      res.status(500).send("Internal Server Error");
     });
 
-    // Setup email data
-    let mailOptions = {
-      from: process.env.EMAIL, // sender address
-      to: user.email, // list of receivers
-      subject: 'Food Item Notification', // Subject line
-      text: `We received a request to notify you about the avaliability of ${foodItem.name}. We'll email soon when it's available.`, // plain text body
-    };
-
-    // Send mail with defined transport object
-    let info = await transporter.sendMail(mailOptions);
-
-    console.log('Message sent: %s', info.messageId);
-
-    res.status(200).send("Notifications sent");
   } catch (error) {
     console.error("Error sending notifications:", error);
-    res.status(500).send(error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -306,7 +294,7 @@ app.get("/profile", isLoggedIn, async (req, res) => {
   }
 
   const reservations = await reservationModel.find({
-    user: user._id, // Ensure the user field is populated with a valid ObjectId
+    user: user._id,
   });
 
   for (const item of reservations) {
