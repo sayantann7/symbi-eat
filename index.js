@@ -6,6 +6,7 @@ const userModel = require("./models/users");
 const inventoryModel = require("./models/inventory");
 const reservationModel = require("./models/reservations");
 const orderModel = require("./models/orders");
+const notificationModel = require("./models/notifications");
 const localStrategy = require("passport-local");
 const session = require("session");
 const expressSession = require("express-session");
@@ -263,21 +264,15 @@ app.get("/notify/:itemID", isLoggedIn, async (req, res) => {
       return res.status(404).send("Food item not found");
     }
 
-    // Send SMS notification
-    client.messages.create({
-      body: `We received a request to notify you about the avaliability of ${foodItem.name}. We'll send a sms soon when it's available.`,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: user.phoneNumber
-    }).then(message => {
-      console.log(`Message sent: ${message.sid}`);
-      res.status(200).send("Notification sent");
-    }).catch(error => {
-      console.error("Error sending SMS:", error);
-      res.status(500).send("Internal Server Error");
+    const notificationData = new notificationModel({
+      user: user._id,
+      foodItemID: foodItem.foodID,
     });
 
+    await notificationData.save();
+
   } catch (error) {
-    console.error("Error sending notifications:", error);
+    console.error("Error creating notifications:", error);
     res.status(500).send("Internal Server Error");
   }
 });
