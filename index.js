@@ -80,12 +80,22 @@ app.post("/register", (req, res) => {
 
   userModel
     .register(userData, req.body.password)
-    .then(function (registeredUser) {
-      passport.authenticate("local")(req, res, () => {
-        res.redirect("/home");
+    .then((registeredUser) => {
+      req.logIn(registeredUser, (err) => {
+        if (err) {
+          console.error("Login error after registration:", err);
+          return res.status(400).send("Login failed after registration.");
+        }
+        // Successful registration and login
+        return res.redirect("/home");
       });
+    })
+    .catch((err) => {
+      console.error("Registration error:", err);
+      res.status(400).send("Registration failed.");
     });
 });
+
 
 app.post(
   "/login",
