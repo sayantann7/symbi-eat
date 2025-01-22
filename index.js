@@ -17,6 +17,7 @@ const multer = require("multer");
 require("dotenv").config();
 const twilio = require('twilio');
 const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const MongoStore = require("connect-mongo");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -41,6 +42,10 @@ app.use(
     secret: "ihqwdhioqhf",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: mongoURI,
+      collectionName: 'sessions'
+    })
   })
 );
 app.use(passport.initialize());
