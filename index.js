@@ -24,6 +24,18 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.urlencoded({ extended: true }));
 
+const mongoose = require('mongoose');
+const mongoURI = process.env.MONGODB_URI;
+
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((err) => {
+  console.error('Error connecting to MongoDB:', err);
+});
+
 app.use(
   expressSession({
     secret: "ihqwdhioqhf",
@@ -43,21 +55,6 @@ app.use(flash());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  next();
-});
-
-app.use((req, res, next) => {
-  const mongoose = require('mongoose');
-  const mongoURI = process.env.MONGODB_URI;
-  
-  mongoose.connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  }).then(() => {
-    console.log('Connected to MongoDB');
-  }).catch((err) => {
-    console.error('Error connecting to MongoDB:', err);
-  });
   next();
 });
 
