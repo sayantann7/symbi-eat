@@ -47,6 +47,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+  const mongoose = require('mongoose');
   const mongoURI = process.env.MONGODB_URI;
   
   mongoose.connect(mongoURI, {
