@@ -90,9 +90,8 @@ app.post("/register", (req, res) => {
   let userData = new userModel({
     fullName: req.body.fullName,
     username: req.body.prn,
-    phoneNumber: `+91${req.body.phone}`,
+    phoneNumber: req.body.phone,
     email: req.body.email,
-    secret: req.body.secret,
   });
 
   userModel
@@ -101,7 +100,8 @@ app.post("/register", (req, res) => {
       req.logIn(registeredUser, (err) => {
         if (err) {
           console.error("Login error after registration:", err);
-          return res.status(400).send("Login failed after registration.");
+          req.flash("error", "Login failed after registration.");
+          return res.redirect("/signup");
         }
         // Successful registration and login
         return res.redirect("/home");
@@ -109,10 +109,10 @@ app.post("/register", (req, res) => {
     })
     .catch((err) => {
       console.error("Registration error:", err);
-      res.status(400).send("Registration failed.");
+      req.flash("error", err.message);
+      res.redirect("/signup");
     });
 });
-
 
 app.post(
   "/login",
@@ -125,11 +125,11 @@ app.post(
 );
 
 app.get("/", (req, res) => {
-  res.render("login");
+  res.render("login", { messages: req.flash() });
 });
 
 app.get("/signup", (req, res) => {
-  res.render("signup");
+  res.render("signup", { messages: req.flash() });
 });
 
 app.get("/home", isLoggedIn, async (req, res) => {

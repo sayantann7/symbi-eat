@@ -18,13 +18,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
     unique: true,
-    maxlength: 13
+    match: [/^(?:\+91\d{10}|\+(?!91)[1-9]\d{7,14})$/, 'Please enter a valid phone number']
   },
   email: {
     type: String,
     required: true,
     trim: true,
-    unique: true
+    unique: true,
+    match: [/\S+@\S+\.\S+/, 'Please enter a valid email']
   },
   password: {
     type: String,
